@@ -62,6 +62,8 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
+    environment:
+      CLIENT_SITE: ${CLIENT_SITE}
     entrypoint:
       - bash
       - -c
@@ -85,6 +87,7 @@ services:
         echo "sites/common_site_config.json found";
         bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --set-default frontend;
         bench --site frontend install-app mahakaal;
+        bench --site frontend set-config allow_cors "[${CLIENT_SITE}]" --parse;
         bench --site frontend migrate;
 
 
