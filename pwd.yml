@@ -87,7 +87,8 @@ services:
         echo "sites/common_site_config.json found";
         bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --set-default frontend;
         bench --site frontend install-app mahakaal;
-        bench --site frontend set-config allow_cors "[${CLIENT_SITE}]" --parse;
+        bench set-config allow_cors '*';
+        # bench --site frontend set-config allow_cors "[${CLIENT_SITE}]" --parse;
         bench --site frontend migrate;
 
 
