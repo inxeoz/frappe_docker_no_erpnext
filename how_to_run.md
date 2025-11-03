@@ -77,7 +77,7 @@ or
 
 ```bash
 $env:FRONTEND_PORT = "8080"
-FRONTEND_PORT=8890 docker compose --project-name mahakaal -f pwd.yml up -d
+docker compose  -f pwd.yml up -d
 ```
 
 # CACHE_BUSH
