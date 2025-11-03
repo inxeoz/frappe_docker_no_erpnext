@@ -61,15 +61,17 @@ podman build \
 ```
 # Run container 
 
-```
+```bash
 docker compose -f pwd.yml up -d
 ```
-```
+
+```bash
  FRONTEND_PORT=8890 docker compose -f pwd.yml up -d
 ```
 
 ### windows
-```
+
+```bash
 $env:FRONTEND_PORT = "8090"
 docker compose -f pwd.yml up -d
 
