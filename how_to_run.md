@@ -66,25 +66,12 @@ docker compose -f pwd.yml up -d
 ```
 
 ```bash
- FRONTEND_PORT=8890 docker compose -f pwd.yml up -d
+ FRONTEND_PORT=8890 docker compose  --project-name mahakaal -f pwd.yml up -d
 ```
 
 ### windows
 
 ```bash
-$env:FRONTEND_PORT = "8090"
-docker compose -f pwd.yml up -d
-
-```
-
-
-
-# First instance
 $env:FRONTEND_PORT = "8080"
-docker compose -f pwd.yml --project-name frappe_a up -d
-
-# Second instance
-$env:FRONTEND_PORT = "8090"
-docker compose -f pwd.yml --project-name frappe_b up -d
-
-
+FRONTEND_PORT=8890 docker compose --project-name mahakaal -f pwd.yml up -d
+```
