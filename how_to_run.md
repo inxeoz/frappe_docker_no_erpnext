@@ -63,3 +63,10 @@ docker compose -f pwd.yml up -d
  FRONTEND_PORT=8890 docker compose -f pwd.yml up -d
 ```
 
+### windows
+```
+$env:FRONTEND_PORT = "8090"
+docker compose -f pwd.yml up -d
+
+```
+
