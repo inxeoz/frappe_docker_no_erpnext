@@ -89,6 +89,6 @@ CACHE_BUST=$(date +%s) docker compose -f pwd.yml build backend
 ### in windows
 ```bash
 $env:CACHE_BUST = [int](Get-Date -UFormat %s)
-docker compose -f pwd.yml build --build-arg CACHE_BUST=$env:CACHE_BUST backend
+docker compose -f pwd.yml build --build-arg CACHE_BUST=$env:CACHE_BUST
 
 ```
