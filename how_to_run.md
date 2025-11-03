@@ -79,3 +79,16 @@ or
 $env:FRONTEND_PORT = "8080"
 FRONTEND_PORT=8890 docker compose --project-name mahakaal -f pwd.yml up -d
 ```
+
+# CACHE_BUSH
+
+```bash
+CACHE_BUST=$(date +%s) docker compose -f pwd.yml build backend
+
+```
+### in windows
+```bash
+$env:CACHE_BUST = [int](Get-Date -UFormat %s)
+docker compose -f pwd.yml build --build-arg CACHE_BUST=$env:CACHE_BUST backend
+
+```
