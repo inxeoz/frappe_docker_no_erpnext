@@ -59,4 +59,7 @@ podman build \
 ```
 docker compose -f pwd.yml up -d
 ```
+```
+ FRONTEND_PORT=8890 docker compose -f pwd.yml up -d
+```
 
