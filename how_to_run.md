@@ -92,3 +92,8 @@ $env:CACHE_BUST = [int](Get-Date -UFormat %s)
 docker compose -f pwd.yml build --build-arg CACHE_BUST=$env:CACHE_BUST
 
 ```
+
+
+#TOPCIS
+
+>> --no-cache
