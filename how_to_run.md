@@ -66,6 +66,10 @@ docker compose -f pwd.yml up -d
 ```
 
 ```bash
+ FRONTEND_PORT=8890 docker compose -f pwd.yml up -d
+```
+or
+```bash
  FRONTEND_PORT=8890 docker compose  --project-name mahakaal -f pwd.yml up -d
 ```
 

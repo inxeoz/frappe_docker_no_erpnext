@@ -8,6 +8,7 @@ services:
         FRAPPE_PATH: https://github.com/frappe/frappe
         FRAPPE_BRANCH: version-15
         APPS_JSON_BASE64: ${APPS_JSON_BASE64}
+        CACHE_BUST: ${CACHE_BUST:-1}
     image: frappe/base
     networks:
       - frappe_network
