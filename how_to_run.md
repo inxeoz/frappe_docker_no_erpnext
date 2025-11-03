@@ -36,6 +36,11 @@ Then generate a base64-encoded string from this file:
 ```bash
 export APPS_JSON_BASE64=$(base64 -w 0 apps.json)
 ```
+### windows
+
+```
+$env:APPS_JSON_BASE64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-Path $PWD "apps.json")))
+```
 
 # Build the image
 `Docker`:
