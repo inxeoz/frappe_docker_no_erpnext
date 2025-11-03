@@ -1,5 +1,6 @@
 services:
   backend:
+    restart: always
     build:
       context: .
       dockerfile: images/layered/Containerfile
@@ -93,6 +94,7 @@ services:
 
 
   db:
+    restart: always
     image: mariadb:10.6
     networks:
       - frappe_network
@@ -115,6 +117,7 @@ services:
       - db-data:/var/lib/mysql
 
   frontend:
+    restart: always
     image: frappe/base
     networks:
       - frappe_network
@@ -141,6 +144,7 @@ services:
       - "8080:8080"
 
   queue-long:
+    restart: always
     image: frappe/base
     networks:
       - frappe_network
@@ -160,6 +164,7 @@ services:
       FRAPPE_REDIS_QUEUE: redis://redis-queue:6379
 
   queue-short:
+    restart: always
     image: frappe/base
     networks:
       - frappe_network
@@ -179,6 +184,7 @@ services:
       FRAPPE_REDIS_QUEUE: redis://redis-queue:6379
 
   redis-queue:
+    restart: always
     image: redis:6.2-alpine
     networks:
       - frappe_network
@@ -189,6 +195,7 @@ services:
       - redis-queue-data:/data
 
   redis-cache:
+    restart: always
     image: redis:6.2-alpine
     networks:
       - frappe_network
@@ -197,6 +204,7 @@ services:
         condition: on-failure
 
   scheduler:
+    restart: always
     image: frappe/base
     networks:
       - frappe_network
@@ -211,6 +219,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   websocket:
+    restart: always
     image: frappe/base
     networks:
       - frappe_network
