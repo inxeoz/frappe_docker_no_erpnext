@@ -8,13 +8,16 @@ services:
         FRAPPE_PATH: https://github.com/frappe/frappe
         FRAPPE_BRANCH: version-15
         APPS_JSON_BASE64: ${APPS_JSON_BASE64}
-        
     image: frappe/base
     networks:
       - frappe_network
-    deploy:
-      restart_policy:
-        condition: on-failure
+    depends_on:
+      db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+      redis-queue:
+        condition: service_healthy
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
@@ -28,9 +31,6 @@ services:
     image: frappe/base
     networks:
       - frappe_network
-    deploy:
-      restart_policy:
-        condition: none
     entrypoint:
       - bash
       - -c
@@ -57,9 +57,6 @@ services:
     image: frappe/base
     networks:
       - frappe_network
-    deploy:
-      restart_policy:
-        condition: none
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
@@ -89,9 +86,7 @@ services:
         bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --set-default frontend;
         bench --site frontend install-app mahakaal;
         bench set-config allow_cors '*';
-        # bench --site frontend set-config allow_cors "[${CLIENT_SITE}]" --parse;
         bench --site frontend migrate;
-
 
   db:
     restart: always
@@ -99,12 +94,10 @@ services:
     networks:
       - frappe_network
     healthcheck:
-      test: mysqladmin ping -h localhost --password=admin
-      interval: 1s
-      retries: 20
-    deploy:
-      restart_policy:
-        condition: on-failure
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--password=admin"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
@@ -116,16 +109,40 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
+  redis-cache:
+    restart: always
+    image: redis:6.2-alpine
+    networks:
+      - frappe_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  redis-queue:
+    restart: always
+    image: redis:6.2-alpine
+    networks:
+      - frappe_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - redis-queue-data:/data
+
   frontend:
     restart: always
     image: frappe/base
     networks:
       - frappe_network
     depends_on:
-      - websocket
-    deploy:
-      restart_policy:
-        condition: on-failure
+      backend:
+        condition: service_started
+      websocket:
+        condition: service_started
     command:
       - nginx-entrypoint.sh
     environment:
@@ -148,9 +165,11 @@ services:
     image: frappe/base
     networks:
       - frappe_network
-    deploy:
-      restart_policy:
-        condition: on-failure
+    depends_on:
+      redis-queue:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
     command:
       - bench
       - worker
@@ -168,9 +187,11 @@ services:
     image: frappe/base
     networks:
       - frappe_network
-    deploy:
-      restart_policy:
-        condition: on-failure
+    depends_on:
+      redis-queue:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
     command:
       - bench
       - worker
@@ -183,34 +204,16 @@ services:
       FRAPPE_REDIS_CACHE: redis://redis-cache:6379
       FRAPPE_REDIS_QUEUE: redis://redis-queue:6379
 
-  redis-queue:
-    restart: always
-    image: redis:6.2-alpine
-    networks:
-      - frappe_network
-    deploy:
-      restart_policy:
-        condition: on-failure
-    volumes:
-      - redis-queue-data:/data
-
-  redis-cache:
-    restart: always
-    image: redis:6.2-alpine
-    networks:
-      - frappe_network
-    deploy:
-      restart_policy:
-        condition: on-failure
-
   scheduler:
     restart: always
     image: frappe/base
     networks:
       - frappe_network
-    deploy:
-      restart_policy:
-        condition: on-failure
+    depends_on:
+      redis-queue:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
     command:
       - bench
       - schedule
@@ -223,9 +226,11 @@ services:
     image: frappe/base
     networks:
       - frappe_network
-    deploy:
-      restart_policy:
-        condition: on-failure
+    depends_on:
+      redis-queue:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
     command:
       - node
       - /home/frappe/frappe-bench/apps/frappe/socketio.js
