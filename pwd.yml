@@ -62,7 +62,8 @@ services:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
     environment:
-      CLIENT_SITE: ${CLIENT_SITE}
+      CLIENT_SITE: frontend
+      APPS_TO_INSTALL: erpnext hrms healthcare payments non_profit agriculture
     entrypoint:
       - bash
       - -c
@@ -84,10 +85,12 @@ services:
           fi
         done;
         echo "sites/common_site_config.json found";
-        bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --set-default frontend;
-        bench --site frontend install-app mahakaal;
+        bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --set-default $${CLIENT_SITE};
+        for app in $${APPS_TO_INSTALL}; do
+          bench --site $${CLIENT_SITE} install-app $$app;
+        done;
         bench set-config allow_cors '*';
-        bench --site frontend migrate;
+        bench --site $${CLIENT_SITE} migrate;
 
   db:
     restart: always
