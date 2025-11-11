@@ -42,6 +42,11 @@ export APPS_JSON_BASE64=$(base64 -w 0 apps.json)
 $env:APPS_JSON_BASE64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-Path $PWD "apps.json")))
 ```
 
+### verify
+
+```
+ echo $APPS_JSON_BASE64=$
+```
 # Build the image
 `Docker`:
 
