@@ -14,4 +14,3 @@ echo "############# APPS_JSON_BASE64 ################\n\n"
 docker compose -f mapit_pwd.yml build
 
 docker compose -f mapit_pwd.yml up -d
-
