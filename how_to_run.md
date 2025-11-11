@@ -45,7 +45,7 @@ $env:APPS_JSON_BASE64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-
 ### verify
 
 ```
- echo $APPS_JSON_BASE64=$
+ echo $APPS_JSON_BASE64
 ```
 # Build the image
 `Docker`:
