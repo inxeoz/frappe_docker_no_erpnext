@@ -62,7 +62,7 @@ services:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
     environment:
-      CLIENT_SITE: _5e5899d8398b5f7b
+      CLIENT_SITE: frontend
       APPS_TO_INSTALL: erpnext hrms healthcare payments non_profit agriculture
     entrypoint:
       - bash
@@ -151,7 +151,7 @@ services:
       - nginx-entrypoint.sh
     environment:
       BACKEND: backend:8000
-      FRAPPE_SITE_NAME_HEADER: _5e5899d8398b5f7b
+      FRAPPE_SITE_NAME_HEADER: frontend
       SOCKETIO: websocket:9000
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
